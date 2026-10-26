@@ -9,16 +9,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Comparator;
+
 @Getter
 @Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_expense")
-public class UserExpense extends BaseModel{
-    @ManyToOne
-    @JoinColumn(name = "expense_id")
-    private Expense expense;
+public class UserExpense extends BaseModel implements Comparable<UserExpense> {
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -27,5 +27,14 @@ public class UserExpense extends BaseModel{
 
     double amount;
 
+    public UserExpense(User user, Double amount) {
+        this.user = user;
+        this.amount = amount;
+    }
 
+
+    @Override
+    public int compareTo(UserExpense userExpense) {
+        return Double.compare(amount,userExpense.amount);
+    }
 }

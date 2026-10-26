@@ -21,9 +21,9 @@ public class Expense extends BaseModel{
     String name;
     double amount;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "expense")
+    @OneToMany(fetch = FetchType.EAGER)
     List<UserExpense> paidBy;
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "expense")
+    @OneToMany(fetch = FetchType.EAGER)
     List<UserExpense> owedBy;
 
 

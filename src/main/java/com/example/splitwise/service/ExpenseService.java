@@ -60,12 +60,6 @@ public class ExpenseService {
 
 
 
-        Expense expense = Expense.builder()
-                .name(createExpenseDto.getName())
-                .group(groupOptional.get())
-                .amount(createExpenseDto.getAmount())
-                .build();
-        Expense savedExpense =  expenseRepository.save(expense);
 
         List<UserExpense> paidByUsersExpenses = new ArrayList<>();
         for(Map.Entry<Long,Double> entry: createExpenseDto.getPaidBy().entrySet())
@@ -77,10 +71,10 @@ public class ExpenseService {
                 throw new InvalidUsersExp("User not Exist");
 
             User user = optionalUser.get();
-            UserExpense userExpense = new UserExpense(savedExpense,user,amount);
+            UserExpense userExpense = new UserExpense(user,amount);
             paidByUsersExpenses.add(userExpense);
         }
-        userExpenseRepository.saveAll(paidByUsersExpenses);
+        List<UserExpense> paidByUsers = userExpenseRepository.saveAll(paidByUsersExpenses);
 
         List<UserExpense> owedByUsersExpenses = new ArrayList<>();
         for(Map.Entry<Long,Double> entry: createExpenseDto.getOwedBy().entrySet())
@@ -92,12 +86,18 @@ public class ExpenseService {
                 throw new InvalidUsersExp("User not Exist");
 
             User user = optionalUser.get();
-            UserExpense userExpense = new UserExpense(savedExpense,user,-amount);
+            UserExpense userExpense = new UserExpense(user,-amount);
             owedByUsersExpenses.add(userExpense);
         }
-        userExpenseRepository.saveAll(owedByUsersExpenses);
+      List<UserExpense> owedByUsers =  userExpenseRepository.saveAll(owedByUsersExpenses);
 
-
-        return  savedExpense;
+        Expense expense = Expense.builder()
+                .name(createExpenseDto.getName())
+                .group(groupOptional.get())
+                .amount(createExpenseDto.getAmount())
+                .owedBy(owedByUsers)
+                .paidBy(paidByUsers)
+                .build();
+        return expenseRepository.save(expense);
     }
 }
