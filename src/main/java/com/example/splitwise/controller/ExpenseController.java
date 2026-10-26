@@ -1,0 +1,27 @@
+package com.example.splitwise.controller;
+
+import com.example.splitwise.Dtos.CreateExpenseDto;
+import com.example.splitwise.models.Expense;
+import com.example.splitwise.service.ExpenseService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("expense")
+public class ExpenseController {
+    private final ExpenseService expenseService;
+
+
+    public ExpenseController(ExpenseService expenseService)
+    {
+        this.expenseService = expenseService;
+    }
+
+    @PostMapping("")
+    public Expense createExpense(@RequestBody CreateExpenseDto createExpenseDto)
+    {
+        return expenseService.createExpense(createExpenseDto);
+    }
+}
